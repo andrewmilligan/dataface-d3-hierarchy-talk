@@ -65,19 +65,24 @@ And as the viz work that D3 is doing gets more complicated, separating out the
 _planning_ from the _drawing_ can get more difficult as well.
 
 ```js
-// Sort your 
+// Stratify the data into a tree form
+const stratify = d3.stratify()
+  .id((d) => d.name)
+  .parentId((d) => d.group);
+const stratifiedData = stratify(dataToStratify);
+
 // Build a hierarchy from your data
-const hierarchy = d3.hierarchy(data)
+const hierarchyData = d3.hierarchy(stratifiedData)
   .sum(d => d.value)
   .sort((a, b) => b.value - a.value);
 
 // Set up a packing function to compute the circles
-const pack = (data) => d3.pack()
+const pack = d3.pack()
   .size([width, height])
   .padding(3);
 
 // Pack your hierarchy and convert it into a node tree to draw
-const root = pack(hierarchy)(data);
+const root = pack(hierarchyData);
 ```
 
 But it's also where we can unlock some real power!
