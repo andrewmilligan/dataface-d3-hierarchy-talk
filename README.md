@@ -142,7 +142,7 @@ themselves.
 const dataToStratify = [
   { name: "root", group: "" }, // the parent of everything
   { name: "focused", group: "root" }, // the parent of our "focused" group
-  ...dataWithGroups, // all our actual data points
+  ...data, // all our actual data points
 ];
 ```
 
