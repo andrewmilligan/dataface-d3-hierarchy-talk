@@ -13,8 +13,8 @@ Many classic examples of using D3 [look like this][d3-line-example]:
 
   // Declare the line generator
   const line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.close));
+    .x(d => x(d.date))
+    .y(d => y(d.close));
 
   // Draw the line as a path in the SVG
   svg.append("path")
@@ -32,8 +32,8 @@ Looking closely, we can tease apart _planning_ what to draw...
 
   // Declare the line generator
   const line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.close));
+    .x(d => x(d.date))
+    .y(d => y(d.close));
 ```
 
 from actually _drawing_ it.
