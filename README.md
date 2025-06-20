@@ -1,4 +1,4 @@
-# Hacking D3 Hierarchy
+# Off-label uses of D3
 
 Making math do your layout work for you by making up data for fun and profit.
 
