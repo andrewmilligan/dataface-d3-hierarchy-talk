@@ -106,8 +106,6 @@ Circle packing to the rescue!
 
 Let's look at an example to see what this looks like in practice.
 
-![Code example](./images/code-example.png)
-
 We start out with some data representing the "people" that we want to lay out
 in clusters. Each person has a `name` that identifies them and a `group` that
 specifies which group they're going to be in. Here, people are either in the
