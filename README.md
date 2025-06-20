@@ -59,7 +59,7 @@ D3 has sub-modules to do everything, including [circle
 packing](https://en.wikipedia.org/wiki/Circle_packing) with [d3-hierarchy][].
 In examples you'll generally see the typical use case look something like this:
 
-![Circle packing](./images/circle-pack.png)
+![Circle packing](./images/circle-pack-padded.png)
 
 And as the viz work that D3 is doing gets more complicated, separating out the
 _planning_ from the _drawing_ can get more difficult as well.
