@@ -65,6 +65,7 @@ And as the viz work that D3 is doing gets more complicated, separating out the
 _planning_ from the _drawing_ can get more difficult as well.
 
 ```js
+// Sort your 
 // Build a hierarchy from your data
 const hierarchy = d3.hierarchy(data)
   .sum(d => d.value)
@@ -95,6 +96,106 @@ becomes a pain.
 Circle packing to the rescue!
 
 ![McCarthy head blobs circle packing](./images/mccarthy-circle-pack.png)
+
+## Fudging the numbers
+
+Let's look at an example to see what this looks like in practice.
+
+![Code example](./images/code-example.png)
+
+We start out with some data representing the "people" that we want to lay out
+in clusters. Each person has a `name` that identifies them and a `group` that
+specifies which group they're going to be in. Here, people are either in the
+"focused" group, meaning they should end up in the big group, or they're in the
+"root" group, meaning they should be shirked off to the periphery.
+
+```js
+const data = [
+  {
+    name: "Alice",
+    group: "focused",
+  },
+  {
+    name: "Bob",
+    group: "focused",
+  },
+  // ...
+  {
+    name: "Frank",
+    group: "root",
+  },
+  {
+    name: "Gabrielle",
+    group: "root",
+  },
+  // ...
+];
+```
+
+Next, we have to add in a couple of "made up" nodes to represent the groups
+themselves.
+
+```js
+const dataToStratify = [
+  { name: "root", group: "" }, // the parent of everything
+  { name: "focused", group: "root" }, // the parent of our "focused" group
+  ...dataWithGroups, // all our actual data points
+];
+```
+
+Now we can use the `stratify` function from [d3-hierarchy][] to reorganize the
+data into a nested tree of objects.
+
+```js
+const strat = stratify()
+  .id((d) => d.name)
+  .parentId((d) => d.group);
+const stratifiedData = strat(dataToStratify);
+```
+
+With our data in tree form, we can compute some information about its
+hierarchy, summing up individual values from each node to compute the total
+value contained by parent nodes.
+
+```js
+const dataHierarchy = hierarchy(stratifiedData)
+  .sum((d) => d.data.group === "focused" ? 10 : 2);
+```
+
+Finally, we can use that hierarchy information to compute the circle pack
+layout for our dataset.
+
+```js
+const makePack = pack()
+  .size([width, height])
+  .padding(padding);
+const root = makePack(dataHierarchy);
+```
+
+At the end of the day, the `root` object will look something like this:
+
+```js
+{
+  r: 250,
+  x: 250,
+  y: 250,
+  // ... other metadata
+  children: [
+    {
+      r: 210,
+      x: 213,
+      y: 254,
+      // ... other metadata
+    },
+    // ... more nodes
+  ],
+}
+```
+
+So now we have a data-driven representation of how our people should be laid
+out on the page, and we can use that to render our visual! If the groups change
+or we add or subtract a person, the whole layout will update automatically.
+Yay!
 
 [d3-hierarchy]: https://d3js.org/d3-hierarchy
 [d3-pack-example]: https://observablehq.com/@d3/pack-component
